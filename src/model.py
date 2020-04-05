@@ -4,7 +4,7 @@
 """
 
 import torch
-import params
+import parameters
 
 '''
 model.py
@@ -15,9 +15,9 @@ class net_G(torch.nn.Module):
     def __init__(self, args):
         super(net_G, self).__init__()
         self.args = args
-        self.cube_len = params.cube_len
-        self.bias = params.bias
-        self.z_dim = params.z_dim
+        self.cube_len = parameters.cube_len
+        self.bias = parameters.bias
+        self.z_dim = parameters.z_dim
         self.f_dim = 32
 
         padd = (0, 0, 0)
@@ -57,9 +57,9 @@ class net_D(torch.nn.Module):
     def __init__(self, args):
         super(net_D, self).__init__()
         self.args = args
-        self.cube_len = params.cube_len
-        self.leak_value = params.leak_value
-        self.bias = params.bias
+        self.cube_len = parameters.cube_len
+        self.leak_value = parameters.leak_value
+        self.bias = parameters.bias
 
         padd = (0,0,0)
         if self.cube_len == 32:
