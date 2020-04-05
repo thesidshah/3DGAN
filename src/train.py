@@ -17,7 +17,7 @@ import time
 from tensorboardX import SummaryWriter
 import matplotlib.pyplot as plt
 import numpy as np
-import params
+import parameters
 from tqdm import tqdm
 
 def save_train_logs(writer, loss_D, loss_G, itr):
@@ -46,7 +46,7 @@ def save_val_log(writer, loss_D, loss_G, itr):
 def trainer(args):
 
     
-    save_file_path = params.output_dir + '/' + args.model_name
+    save_file_path = parameters.output_dir + '/' + args.model_name
     print (save_file_path) 
     if not os.path.exists(save_file_path):
         os.makedirs(save_file_path)
@@ -54,9 +54,9 @@ def trainer(args):
     
     if args.logs:
         model_uid = datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
-        writer = SummaryWriter(params.output_dir+'/'+args.model_name+'/logs_'+model_uid+'_'+args.logs+'/')
+        writer = SummaryWriter(parameters.output_dir+'/'+args.model_name+'/logs_'+model_uid+'_'+args.logs+'/')
     
-    dsets_path = params.data_dir + params.model_dir + "30/train/"
+    dsets_path = parameters.data_dir + parameters.model_dir + "30/train/"
     
 
     print (dsets_path)   
@@ -64,7 +64,7 @@ def trainer(args):
     train_dsets = ShapeNetDataset(dsets_path, args, "train")
     
     
-    train_dset_loaders = torch.utils.data.DataLoader(train_dsets, batch_size=params.batch_size, shuffle=True, num_workers=1)
+    train_dset_loaders = torch.utils.data.DataLoader(train_dsets, batch_size=parameters.batch_size, shuffle=True, num_workers=1)
     
     dset_len = {"train": len(train_dsets)}
     dset_loaders = {"train": train_dset_loaders}
@@ -74,11 +74,11 @@ def trainer(args):
     G = net_G(args)
 
 
-    D_solver = optim.Adam(D.parameters(), lr=params.d_lr, betas=params.beta)
-    G_solver = optim.Adam(G.parameters(), lr=params.g_lr, betas=params.beta)
+    D_solver = optim.Adam(D.parameters(), lr=parameters.d_lr, betas=parameters.beta)
+    G_solver = optim.Adam(G.parameters(), lr=parameters.g_lr, betas=parameters.beta)
 
-    D.to(params.device)
-    G.to(params.device)
+    D.to(parameters.device)
+    G.to(parameters.device)
     
     criterion_D = nn.MSELoss()
     criterion_G = nn.L1Loss()
@@ -86,7 +86,7 @@ def trainer(args):
     itr_val = -1
     iter_tr = -1
 
-    for epoch in range(params.epochs):
+    for epoch in range(parameters.epochs):
 
         start = time.time()
         
@@ -107,7 +107,7 @@ def trainer(args):
                 if phase == 'train':
                     iter_tr += 1
 
-                X = X.to(params.device)
+                X = X.to(parameters.device)
                 
                 batch = X.size()[0]
                 
@@ -122,13 +122,13 @@ def trainer(args):
                 fake = G(Z)
                 d_fake = D(fake)
 
-                real_labels = torch.ones_like(d_real).to(params.device)
-                fake_labels = torch.zeros_like(d_fake).to(params.device)
+                real_labels = torch.ones_like(d_real).to(parameters.device)
+                fake_labels = torch.zeros_like(d_fake).to(parameters.device)
                 
 
-                if params.soft_label:
-                    real_labels = torch.Tensor(batch).uniform_(0.7, 1.2).to(params.device)
-                    fake_labels = torch.Tensor(batch).uniform_(0, 0.3).to(params.device)
+                if parameters.soft_label:
+                    real_labels = torch.Tensor(batch).uniform_(0.7, 1.2).to(parameters.device)
+                    fake_labels = torch.Tensor(batch).uniform_(0, 0.3).to(parameters.device)
 
                 
                 d_real_loss = criterion_D(d_real, real_labels)
@@ -144,7 +144,7 @@ def trainer(args):
                 d_total_acu = torch.mean(torch.cat((d_real_acu, d_fake_acu),0))
 
 
-                if d_total_acu < params.d_thresh:
+                if d_total_acu < parameters.d_thresh:
                     D.zero_grad()
                     d_loss.backward()
                     D_solver.step()
@@ -205,14 +205,14 @@ def trainer(args):
             print('Epochs-{} ({}) , D(x) : {:.4}, D(G(x)) : {:.4}'.format(epoch, phase, epoch_loss_D, epoch_loss_adv_G))
             print ('Elapsed Time: {:.4} min'.format(epoch_time/60.0))
 
-            if (epoch + 1) % params.model_save_step == 0:
+            if (epoch + 1) % parameters.model_save_step == 0:
 
                 print ('model_saved, images_saved...')
-                torch.save(G.state_dict(), params.output_dir + '/' + args.model_name + '/' + 'G' + '.pth')
-                torch.save(D.state_dict(), params.output_dir + '/' + args.model_name + '/' + 'D' + '.pth')
+                torch.save(G.state_dict(), parameters.output_dir + '/' + args.model_name + '/' + 'G' + '.pth')
+                torch.save(D.state_dict(), parameters.output_dir + '/' + args.model_name + '/' + 'D' + '.pth')
 
                 samples = fake.cpu().data[:8].squeeze().numpy()
-                image_saved_path = params.images_dir
+                image_saved_path = parameters.images_dir
                 if not os.path.exists(image_saved_path):
                     os.makedirs(image_saved_path)
 
