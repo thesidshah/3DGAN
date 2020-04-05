@@ -5,9 +5,9 @@ import scipy.ndimage as nd
 from skimage import measure
 import scipy.io as io
 import matplotlib
-import params
+import parameters
 
-if params.device.type != 'cpu':
+if parameters.device.type != 'cpu':
     matplotlib.use('Agg')
 
 import matplotlib.pyplot as plt
@@ -94,7 +94,7 @@ class ShapeNetDataset(data.Dataset):
 
     def __getitem__(self, index):
         with open(self.root + self.listdir[index], "rb") as f:
-            volume = np.asarray(getVoxelFromMat(f, params.cube_len), dtype=np.float32)
+            volume = np.asarray(getVoxelFromMat(f, parameters.cube_len), dtype=np.float32)
         return torch.FloatTensor(volume)
 
     def __len__(self):
@@ -103,10 +103,10 @@ class ShapeNetDataset(data.Dataset):
 
 def generateZ(args, batch):
 
-    if params.z_dis == "norm":
-        Z = torch.Tensor(batch, params.z_dim).normal_(0, 0.33).to(params.device)
-    elif params.z_dis == "uni":
-        Z = torch.randn(batch, params.z_dim).to(params.device).to(params.device)
+    if parameters.z_dis == "norm":
+        Z = torch.Tensor(batch, parameters.z_dim).normal_(0, 0.33).to(parameters.device)
+    elif parameters.z_dis == "uni":
+        Z = torch.randn(batch, parameters.z_dim).to(parameters.device).to(parameters.device)
     else:
         print("z_dist is not normal or uniform")
     return Z
