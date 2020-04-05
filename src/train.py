@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """
+Siddhant Shah, Aditi Thopte, Vrushali Ghodnadikar
 train.py
 """
 
@@ -19,7 +20,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import parameters
 from tqdm import tqdm
-
+#siddhant
 def save_train_logs(writer, loss_D, loss_G, itr):
     scalar_info = {}
     for key, value in loss_G.items():
@@ -30,7 +31,7 @@ def save_train_logs(writer, loss_D, loss_G, itr):
 
     for tag, value in scalar_info.items():
         writer.add_scalar(tag, value, itr)
-
+#vrushali
 def save_val_log(writer, loss_D, loss_G, itr):
     scalar_info = {}
     for key, value in loss_G.items():
@@ -42,7 +43,7 @@ def save_val_log(writer, loss_D, loss_G, itr):
     for tag, value in scalar_info.items():
         writer.add_scalar(tag, value, itr)
 
-
+#aditi thopte
 def trainer(args):
 
     

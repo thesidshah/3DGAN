@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@author: Siddhant, Vrushali, Prabhdeep, Aditi
+Aditi Thopte, Vrushali G
 """
 
 import torch

@@ -2,7 +2,7 @@
 '''
 parameters.py
 
-Tune the hyper-parameters Prabhdeep
+Tune the hyper-parameters Aditi Thopte
 
 '''
 
